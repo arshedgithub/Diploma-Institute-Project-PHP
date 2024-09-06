@@ -1,3 +1,5 @@
 <?php
-    echo "<h1>Hello Eduzilla Fans!</h1>"
+
+    include_once("./templates/home.php");
+    
 ?>
