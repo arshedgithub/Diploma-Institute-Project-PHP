@@ -13,7 +13,7 @@
             <li><a href="#">Courses</a></li>
             <li><a href="#">Students</a></li>
             <li><a href="#">Lecturers</a></li>
-            <li><a href="#">Login</a></li>
+            <li><a href="#">Logout</a></li>
         </ul>
     </div>
 
