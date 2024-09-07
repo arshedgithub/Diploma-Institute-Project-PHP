@@ -12,6 +12,7 @@
 
     <div class="login-container">
         <form action="#" method="post" class="login-form">
+            <img src="<?php echo $base_url ?>/assets/images/eduzilla.png" alt="logo">
             <h3>Login</h3>
             <div class="input-group">
                 <label for="username">Username</label>
@@ -22,6 +23,7 @@
                 <input type="password" name="password" id="password" required>
             </div>
             <button type="submit" class="login-button">Login</button>
+            <a href="./changePassword.php">Change Password</a>
         </form>
     </div>
 
