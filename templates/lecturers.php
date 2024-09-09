@@ -115,19 +115,22 @@
                 $query->execute();
                 $result = $query->get_result();
 
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $row['regno'] . "</td>";
-                    echo "<td>" . $row['firstname']. " " . $row['lastname'] . "</td>";
-                    echo "<td>" . $row['email'] . "</td>";
-                    echo "<td>" . $row['username'] . "</td>";
-                    echo "<td>" . $row['address'] . "</td>";
-                    echo "<td>" . $row['contact'] . "</td>";
-                    echo "<td>" . $row['gender_name'] . "</td>";
-                    echo "<td>" . $row['lecturer_status'] . "</td>";
-                    echo "</tr>";
+                if ($result->num_rows === 0) {
+                    echo "<tr><td colspan='8'>No records found.</td></tr>";
+                } else {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['regno'] . "</td>";
+                        echo "<td>" . $row['firstname']. " " . $row['lastname'] . "</td>";
+                        echo "<td>" . $row['email'] . "</td>";
+                        echo "<td>" . $row['username'] . "</td>";
+                        echo "<td>" . $row['address'] . "</td>";
+                        echo "<td>" . $row['contact'] . "</td>";
+                        echo "<td>" . $row['gender_name'] . "</td>";
+                        echo "<td>" . $row['lecturer_status'] . "</td>";
+                        echo "</tr>";
+                    }
                 }
-    
             ?>
         </table>
     </div>
