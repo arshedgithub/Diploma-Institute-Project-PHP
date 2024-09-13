@@ -15,7 +15,7 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $query = $conn->prepare("SELECT * FROM user WHERE username = ?");
+        $query = $conn->prepare("SELECT * FROM users WHERE username = ?");
         $query->bind_param("s", $username);
         $query->execute();
         $result = $query->get_result();

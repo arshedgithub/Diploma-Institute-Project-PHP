@@ -1,9 +1,19 @@
 <?php 
-    // include_once(__DIR__ ."/../includes/sidenav.php");
+    include_once(__DIR__ ."/../includes/sidenav.php");
     include "./../config/database.php";
 
+    // Fetching the last registration number
+    $query = $conn->prepare("SELECT regno FROM lecturers ORDER BY id DESC LIMIT 1");
+    $query->execute();
+    $result = $query->get_result();
+    $lastRegNo = $result->fetch_assoc()['regno'];
+    
+    // Auto Generating registration number
+    if ($lastRegNo) $nextRegNo = intval($lastRegNo) + 1;
+    else $nextRegNo = "R" . date("y") . 0001; 
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $regno = $_POST["regno"];
+        // $regno = $_POST["regno"];
         $first_name = $_POST["first_name"];
         $last_name = $_POST["last_name"];
         $middle_name = $_POST["middle_name"];
@@ -59,7 +69,7 @@
                 <form action="./lecturers.php" method="post">
                     <h3>Register New Lecturer</h3>
                     <label for="regno">Registration No.</label>
-                    <input type="text" name="regno" required>
+                    <input type="text" name="regno" value="<?php echo $nextRegNo ?>" required>
                     
                     <label for="first_name">First Name</label>
                     <input type="text" name="first_name" required>
