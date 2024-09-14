@@ -1,19 +1,20 @@
 <?php 
-    include_once(__DIR__ ."/../includes/sidenav.php");
+    // include_once(__DIR__ ."/../includes/sidenav.php");
     include "./../config/database.php";
 
     // Fetching the last registration number
     $query = $conn->prepare("SELECT regno FROM lecturers ORDER BY id DESC LIMIT 1");
     $query->execute();
     $result = $query->get_result();
-    $lastRegNo = $result->fetch_assoc()['regno'];
-    
-    // Auto Generating registration number
-    if ($lastRegNo) $nextRegNo = intval($lastRegNo) + 1;
-    else $nextRegNo = "R" . date("y") . 0001; 
+    if ($result->num_rows === 0) $nextRegNo = "LR-" . date("y") . '0001'; 
+    else {
+        $lastRegNo = $result->fetch_assoc()['regno'];
+        $numberFromLastRegNo = substr($lastRegNo, -4);
+        $nextRegNo = "LR-" . date("y"). str_pad($numberFromLastRegNo + 1, 4, "0", STR_PAD_LEFT);
+        echo $nextRegNo;
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // $regno = $_POST["regno"];
         $first_name = $_POST["first_name"];
         $last_name = $_POST["last_name"];
         $middle_name = $_POST["middle_name"];
@@ -34,7 +35,7 @@
             $user_id = $conn->insert_id;
 
             $query = $conn->prepare("INSERT INTO lecturers (regno, firstname, lastname, middlename, contact, address, gender_id, user_id, status_id) VALUES (?, ?,?, ?,?, ?, 1, ?, 1)");
-            $query->bind_param("sssssss", $regno, $first_name, $last_name, $middle_name, $contact, $address, $user_id);
+            $query->bind_param("sssssss", $nextRegNo, $first_name, $last_name, $middle_name, $contact, $address, $user_id);
             $query->execute();
 
             $conn->commit();
@@ -68,37 +69,39 @@
                 <span class="close" id="closeModal">&times;</span>
                 <form action="./lecturers.php" method="post">
                     <h3>Register New Lecturer</h3>
-                    <label for="regno">Registration No.</label>
-                    <input type="text" name="regno" value="<?php echo $nextRegNo ?>" required>
                     
-                    <label for="first_name">First Name</label>
-                    <input type="text" name="first_name" required>
+                        <label for="regno">Registration No.</label>
+                        <input type="text" name="regno" value="<?php echo $nextRegNo ?>" required>
+                        
+                        <label for="first_name">First Name</label>
+                        <input type="text" name="first_name" required>
 
-                    <label for="middle_name">Middle Name</label>
-                    <input type="text" name="middle_name">
+                        <label for="middle_name">Middle Name</label>
+                        <input type="text" name="middle_name">
 
-                    <label for="last_name">Last Name</label>
-                    <input type="text" name="last_name" required>
+                        <label for="last_name">Last Name</label>
+                        <input type="text" name="last_name" required>
 
-                    <label for="contact">Contact</label>
-                    <input type="text" name="contact" required>
+                        <label for="contact">Contact</label>
+                        <input type="text" name="contact" required>
 
-                    <label for="address">Address</label>
-                    <input type="text" name="address" required>
+                        <label for="address">Address</label>
+                        <input type="text" name="address" required>
 
-                    <label for="email">Email</label>
-                    <input type="email" name="email" required>
+                        <label for="email">Email</label>
+                        <input type="email" name="email" required>
 
-                    <label for="username">Username</label>
-                    <input type="text" name="username" required>
+                        <label for="username">Username</label>
+                        <input type="text" name="username" required>
 
-                    <label for="password">Password</label>
-                    <input type="password" name="password" required>
+                        <label for="password">Password</label>
+                        <input type="password" name="password" required>
 
-                    <label for="confirm_password">Confirm Password</label>
-                    <input type="password" name="confirm_password" required>
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" name="confirm_password" required>
 
-                    <input type="submit" value="Register">
+                        <input type="submit" value="Register">
+
                 </form>
             </div>
         </div>
@@ -149,6 +152,7 @@
         const modal = document.getElementById("lecturerModal");
         const newLecturerBtn = document.getElementById("newLecturerBtn");
         const closeModal = document.getElementById("closeModal");
+        const formFields = document.querySelectorAll(".lecturer_details input[required]");
 
         newLecturerBtn.onclick = function() {
             modal.style.display = "block";
@@ -162,6 +166,16 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+
+        formFields.onChange = function() {
+            let allFilled = true;
+            formFields.forEach(function(field) {
+                if (field.value === "") {
+                    allFilled = false;
+                }
+            });
+            document.querySelector(".next_btn").disabled = !allFilled;
         }
     </script>
 </body>
