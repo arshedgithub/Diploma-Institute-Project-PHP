@@ -1,5 +1,5 @@
 <?php 
-    // include_once(__DIR__ ."/../includes/sidenav.php");
+    include_once(__DIR__ ."/../includes/sidenav.php");
     include "./../config/database.php";
 
     // Fetching the last registration number
@@ -11,7 +11,6 @@
         $lastRegNo = $result->fetch_assoc()['regno'];
         $numberFromLastRegNo = substr($lastRegNo, -4);
         $nextRegNo = "LR-" . date("y"). str_pad($numberFromLastRegNo + 1, 4, "0", STR_PAD_LEFT);
-        echo $nextRegNo;
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -71,7 +70,7 @@
                     <h3>Register New Lecturer</h3>
                     
                         <label for="regno">Registration No.</label>
-                        <input type="text" name="regno" value="<?php echo $nextRegNo ?>" required>
+                        <input type="text" name="regno" value="<?php echo $nextRegNo ?>" required disabled>
                         
                         <label for="first_name">First Name</label>
                         <input type="text" name="first_name" required>
