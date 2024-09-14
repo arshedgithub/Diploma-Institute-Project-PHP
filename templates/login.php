@@ -1,7 +1,6 @@
-<?php $base_url="http://localhost/eduzilla" ?>
-
 <?php
-    session_start();
+
+    $base_url="http://localhost/eduzilla";
 
     include "./../config/database.php";
 
@@ -27,6 +26,12 @@
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
+
+                $query = $conn->prepare("SELECT name FROM roles WHERE id=".  $user['roles_id']);
+                $query->execute();
+                $result = $query->get_result();
+                $_SESSION['role'] = $result->fetch_assoc()['name'];
+
                 header('Location: ./home.php');
                 exit;
             } else {

@@ -1,6 +1,10 @@
 <?php 
+    session_start();
+
     include_once(__DIR__ ."/../includes/sidenav.php");
     include "./../config/database.php";
+
+    if (!isset($_SESSION['role']) || $_SESSION['role'] != "Admin") header('Location: login.php'); exit();
 
     // Fetching the last registration number
     $query = $conn->prepare("SELECT regno FROM lecturers ORDER BY id DESC LIMIT 1");

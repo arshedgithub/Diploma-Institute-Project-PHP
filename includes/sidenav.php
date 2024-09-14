@@ -1,4 +1,7 @@
-<?php $base_url="http://localhost/eduzilla" ?>
+<?php 
+    session_start();
+    $base_url="http://localhost/eduzilla" 
+?>
 
 <html>
 <head>
@@ -10,8 +13,10 @@
         <ul>
             <li><a href="<?php echo $base_url ?>/templates/home.php" class="active">Home</a></li>
             <li><a href="<?php echo $base_url ?>/templates/courses.php">Courses</a></li>
+            <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "Admin"){ ?>
             <li><a href="<?php echo $base_url ?>/templates/students.php">Students</a></li>
             <li><a href="<?php echo $base_url ?>/templates/lecturers.php">Lecturers</a></li>
+            <?php } ?>
             <li><a href="<?php echo $base_url ?>/templates/logout.php">Logout</a></li>
         </ul>
     </div>
