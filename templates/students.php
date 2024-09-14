@@ -2,15 +2,18 @@
     include_once(__DIR__ ."/../includes/sidenav.php");
     include "./../config/database.php";
 
+    session_start();
+    // $_SESSION['role']
+
     // Fetching the last registration number
-    $query = $conn->prepare("SELECT regno FROM lecturers ORDER BY id DESC LIMIT 1");
+    $query = $conn->prepare("SELECT regno FROM students ORDER BY id DESC LIMIT 1");
     $query->execute();
     $result = $query->get_result();
-    if ($result->num_rows === 0) $nextRegNo = "LR-" . date("y") . '0001'; 
+    if ($result->num_rows === 0) $nextRegNo = "SR-" . date("y") . '0001'; 
     else {
         $lastRegNo = $result->fetch_assoc()['regno'];
         $numberFromLastRegNo = substr($lastRegNo, -4);
-        $nextRegNo = "LR-" . date("y"). str_pad($numberFromLastRegNo + 1, 4, "0", STR_PAD_LEFT);
+        $nextRegNo = "SR-" . date("y"). str_pad($numberFromLastRegNo + 1, 4, "0", STR_PAD_LEFT);
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,18 +30,17 @@
         $conn->begin_transaction();
 
         try {
-            $query = $conn->prepare("INSERT INTO users (name, username, password, email, roles_id) VALUES (?, ?, ?, ?, 2)");
+            $query = $conn->prepare("INSERT INTO users (name, username, password, email, roles_id) VALUES (?, ?, ?, ?, 3)");
             $query->bind_param("ssss", $fullname, $username, $password, $email);
             $query->execute();
 
             $user_id = $conn->insert_id;
 
-            $query = $conn->prepare("INSERT INTO lecturers (regno, firstname, lastname, middlename, contact, address, gender_id, user_id, status_id) VALUES (?, ?,?, ?,?, ?, 1, ?, 1)");
+            $query = $conn->prepare("INSERT INTO students (regno, firstname, lastname, middlename, contact, address, gender_id, user_id, studentstatus_id) VALUES (?, ?, ?, ?, ?, ?, 1, ?, 1)");
             $query->bind_param("sssssss", $nextRegNo, $first_name, $last_name, $middle_name, $contact, $address, $user_id);
             $query->execute();
 
             $conn->commit();
-            echo "Admin user and details inserted successfully!";
         } catch (Exception $e) {
             $conn->rollback();
             echo "Error: " . $e->getMessage();
@@ -51,23 +53,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecturer Management</title>
+    <title>Student Management</title>
     <link rel="stylesheet" href="<?php echo "./../assets/css/lecturers.css" ?>">
     </head>
 <body>
 
     <div class="main-content">
 
-        <h2>Lecturer Management</h2>
+        <h2>Student Management</h2>
 
-        <button class="btn" id="newLecturerBtn">New Lecturer</button>
+        <button class="btn" id="newStudentBtn">New Student</button>
 
         <!-- Popup Modal -->
-        <div id="lecturerModal" class="modal">
+        <div id="studentModal" class="modal">
             <div class="modal-content">
                 <span class="close" id="closeModal">&times;</span>
-                <form action="./lecturers.php" method="post">
-                    <h3>Register New Lecturer</h3>
+                <form action="./students.php" method="post">
+                    <h3>Register New Student</h3>
                     
                         <label for="regno">Registration No.</label>
                         <input type="text" name="regno" value="<?php echo $nextRegNo ?>" required disabled>
@@ -119,11 +121,11 @@
             <?php 
               
                 $query = $conn->prepare("
-                    SELECT lecturers.*, users.username, users.email, lecturerstatus.name as lecturer_status, gender.name as gender_name 
-                    FROM lecturers
-                    JOIN users ON lecturers.user_id = users.id
-                    JOIN lecturerstatus ON lecturers.status_id = lecturerstatus.id
-                    JOIN gender ON lecturers.gender_id = gender.id");
+                    SELECT students.*, users.username, users.email, studentstatus.name as student_status, gender.name as gender_name 
+                    FROM students
+                    JOIN users ON students.user_id = users.id
+                    JOIN studentstatus ON students.studentstatus_id = studentstatus.id
+                    JOIN gender ON students.gender_id = gender.id");
                 $query->execute();
                 $result = $query->get_result();
 
@@ -139,7 +141,7 @@
                         echo "<td>" . $row['address'] . "</td>";
                         echo "<td>" . $row['contact'] . "</td>";
                         echo "<td>" . $row['gender_name'] . "</td>";
-                        echo "<td>" . $row['lecturer_status'] . "</td>";
+                        echo "<td>" . $row['student_status'] . "</td>";
                         echo "</tr>";
                     }
                 }
@@ -148,11 +150,11 @@
     </div>
 
     <script>
-        const modal = document.getElementById("lecturerModal");
-        const newLecturerBtn = document.getElementById("newLecturerBtn");
+        const modal = document.getElementById("studentModal");
+        const newStudentBtn = document.getElementById("newStudentBtn");
         const closeModal = document.getElementById("closeModal");
 
-        newLecturerBtn.onclick = function() {
+        newStudentBtn.onclick = function() {
             modal.style.display = "block";
         }
 
@@ -166,7 +168,6 @@
             }
         }
 
-        
     </script>
 </body>
 </html>
