@@ -84,7 +84,7 @@
 
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"], select {
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ddd;

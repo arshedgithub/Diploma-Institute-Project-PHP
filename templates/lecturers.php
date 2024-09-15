@@ -21,6 +21,7 @@
         $middle_name = $_POST["middle_name"];
         $contact = $_POST["contact"];
         $address = $_POST["address"];
+        $gender = $_POST["gender_id"];
         $email = $_POST["email"];
         $fullname = $first_name." ".$last_name;
         $username = $_POST["username"];
@@ -35,8 +36,8 @@
 
             $user_id = $conn->insert_id;
 
-            $query = $conn->prepare("INSERT INTO lecturers (regno, firstname, lastname, middlename, contact, address, gender_id, user_id, status_id) VALUES (?, ?,?, ?,?, ?, 1, ?, 1)");
-            $query->bind_param("sssssss", $nextRegNo, $first_name, $last_name, $middle_name, $contact, $address, $user_id);
+            $query = $conn->prepare("INSERT INTO lecturers (regno, firstname, lastname, middlename, contact, address, gender_id, user_id, status_id) VALUES (?, ?,?, ?,?, ?, ?, ?, 1)");
+            $query->bind_param("ssssssis", $nextRegNo, $first_name, $last_name, $middle_name, $contact, $address, $gender, $user_id);
             $query->execute();
 
             $conn->commit();
@@ -88,6 +89,16 @@
 
                         <label for="address">Address</label>
                         <input type="text" name="address" required>
+
+                        <label for="gender_id">Gender</label>
+                        <select name="gender_id" required> 
+                            <?php
+                                $gender_query = $conn->query("SELECT id, name FROM gender");
+                                while ($genderResult = $gender_query->fetch_assoc()) {
+                                    echo "<option value='{$genderResult['id']}'>{$genderResult['name']}</option>";
+                                }
+                            ?>
+                        </select>
 
                         <label for="email">Email</label>
                         <input type="email" name="email" required>
