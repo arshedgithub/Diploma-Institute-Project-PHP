@@ -13,7 +13,7 @@
         <ul>
             <li><a href="<?php echo $base_url ?>/templates/home.php" class="active">Home</a></li>
             <li><a href="<?php echo $base_url ?>/templates/courses.php">Courses</a></li>
-            <?php if(isset($_SESSION['role']) && $_SESSION['role'] == "Admin"){ ?>
+            <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 1){ ?>
             <li><a href="<?php echo $base_url ?>/templates/students.php">Students</a></li>
             <li><a href="<?php echo $base_url ?>/templates/lecturers.php">Lecturers</a></li>
             <?php } ?>
