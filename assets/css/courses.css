@@ -8,10 +8,15 @@ h1 {
     color: #333;
 }
 
+h2 {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
 .main-content {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px;
 }
 
 .btn {
@@ -27,6 +32,10 @@ h1 {
 
 .btn:hover {
     background-color: #357ABD;
+}
+
+.btn-panel {
+    margin-bottom: 20px;
 }
 
 .modal {
@@ -104,4 +113,49 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #357ABD;
+}
+
+.diploma-section {
+    margin-bottom: 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.diploma-section h2 {
+    margin-top: 0;
+    color: #4A90E2;
+}
+
+.diploma-section p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #707f90;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+table td {
+    color: #555;
 }

@@ -42,10 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <div class="main-content">
-        <h1>Manage Courses</h1>
+        <h2>Manage Courses</h2>
 
-        <button class="btn" id="newDiplomaBtn">New Diploma</button>
-        <button class="btn" id="newCourseModuleBtn">New Course Module</button>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 1){ ?>
+            <div class="btn-panel">
+                <button class="btn" id="newDiplomaBtn">New Diploma</button>
+                <button class="btn" id="newCourseModuleBtn">New Course Module</button>
+            </div>
+        <?php } ?>
 
         <!-- Modal for Diploma -->
         <div id="diplomaModal" class="modal">
@@ -81,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="number" name="credit_value" min="1" max="8" required>
 
                     <label for="course_description">Description</label>
-                    <input type="text" name="course_description" required>
+                    <input type="text" name="course_description">
 
                     <label for="diploma_id">Diploma</label>
                     <select name="diploma_id" required>
@@ -93,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ?>
                     </select>
 
-                    <label for="coordinator_id">Diploma</label>
+                    <label for="coordinator_id">Course Coordinator</label>
                     <select name="coordinator_id" required> 
                         <?php
                             $coordinator_query = $conn->query("SELECT id, firstname, lastname FROM lecturers");
@@ -103,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ?>
                     </select>
 
-                    <label for="department_id">Diploma</label>
+                    <label for="department_id">Department</label>
                     <select name="department_id" required> 
                         <?php
                             $coordinator_query = $conn->query("SELECT id, name FROM department");
@@ -117,6 +121,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
         </div>
+
+        <?php
+
+        $diplomas_query = $conn->query("SELECT id, name, description FROM diploma");
+
+        if ($diplomas_query->num_rows > 0) {
+            while ($diploma = $diplomas_query->fetch_assoc()) {
+                echo "<div class='diploma-section'>";
+                echo "<h2>" . $diploma['name'] . "</h2>";
+                echo "<p>" . $diploma['description'] . "</p>";
+
+                // Fetch the course modules related to this diploma
+                $diploma_id = $diploma['id'];
+                $courses_query = $conn->prepare("
+                    SELECT coursemodule.code, coursemodule.title, coursemodule.creditvalue, 
+                    coursemodule.description, lecturers.firstname, lecturers.lastname, department.name AS department_name 
+                    FROM coursemodule
+                    JOIN lecturers ON coursemodule.coordinator_id = lecturers.id
+                    JOIN department ON coursemodule.department_id = department.id
+                    WHERE coursemodule.diploma_id = ?
+                ");
+                $courses_query->bind_param("i", $diploma_id);
+                $courses_query->execute();
+                $courses_result = $courses_query->get_result();
+
+                if ($courses_result->num_rows > 0) {
+                    echo "<table>";
+                    echo "<tr>
+                        <th>Course Code</th>
+                        <th>Title</th>
+                        <th>Credits</th>
+                        <th>Description</th>
+                        <th>Coordinator</th>
+                        <th>Department</th>
+                    </tr>";
+
+                    while ($course = $courses_result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $course['code'] . "</td>";
+                        echo "<td>" . $course['title'] . "</td>";
+                        echo "<td>" . $course['creditvalue'] . "</td>";
+                        echo "<td>" . $course['description'] . "</td>";
+                        echo "<td>" . $course['firstname'] . " " . $course['lastname'] . "</td>";
+                        echo "<td>" . $course['department_name'] . "</td>";
+                        echo "</tr>";
+                    }
+
+                    echo "</table>";
+                } else {
+                    echo "<p>No course modules available for this diploma.</p>";
+                }
+
+                echo "</div>";
+            }
+        } else {
+            echo "<p>No diplomas found.</p>";
+        }
+    ?>
 
     </div>
 
