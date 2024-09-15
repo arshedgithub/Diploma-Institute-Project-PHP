@@ -9,7 +9,7 @@ Lecturer Credential
     password: 1234
 
 Student Credential
-    username: kamal
+    username: nimal
     password: 1234
 
 - import eduzilla.sql file to database
