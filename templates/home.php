@@ -4,8 +4,19 @@
     
 ?>
 
+<head>
+    <style>
+        h2 {
+            text-align: center;
+            padding-bottom: 2em;
+        }
+    </style>
+</head>
+
 <div class="main-content">
-    <h1>Welcome to the Dashboard</h1>
-    <p>This is your content area where you can add more information, images, etc.</p>
-    
+    <h2>Welcome to the Eduzilla !</h2>
+
+    <a href="courses">All Courses</a>
+    <br><br>
+    Count of Diplomas: 2
 </div>
